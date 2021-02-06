@@ -1,0 +1,15 @@
+#!/bin/sh
+lib="$(git rev-parse --show-toplevel)"
+pkg="$lib/hello_world"
+
+(set -x
+  docker run \
+    --rm \
+    --interactive \
+    --tty \
+    --device /dev/ttyUSB0 \
+    --volume "$pkg:/wrk" \
+    --workdir /wrk \
+    --entrypoint sh \
+    docker.io/espressif/idf:v4.2 \
+    -c '. $IDF_PATH/export.sh && idf.py -p /dev/ttyUSB0 flash')
