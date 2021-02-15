@@ -2,14 +2,19 @@
 lib="$(git rev-parse --show-toplevel)"
 pkg="$lib/blink"
 
+uid="$(id -u)"
+gid="$(id -g)"
+
 (set -x
   docker run \
     --rm \
     --interactive \
     --tty \
+    --user "$uid:$gid" \
     --device /dev/ttyUSB0 \
     --volume "$pkg:/wrk" \
     --workdir /wrk \
-    --entrypoint sh \
     docker.io/espressif/idf:v4.2 \
-    -c '. $IDF_PATH/export.sh && idf.py -p /dev/ttyUSB0 flash')
+    idf.py \
+    -p /dev/ttyUSB0 \
+    flash)
